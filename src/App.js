@@ -11,7 +11,7 @@ function App() {
   useEffect(() => {
     if (selectedTeams.length === 0) return;
 
-    axios.get('http://localhost:8080/api/news', {
+    axios.get('https://football-news-backend-f8zi.onrender.com/api/news', {
       params: { teams: selectedTeams },
       paramsSerializer: params => {
         return params.teams.map(team => `teams=${encodeURIComponent(team)}`).join('&');
