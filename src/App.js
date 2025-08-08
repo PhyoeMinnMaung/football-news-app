@@ -11,19 +11,20 @@ function App() {
   useEffect(() => {
     if (selectedTeams.length === 0) return;
 
-    axios.get('https://football-news-backend-f8zi.onrender.com/api/news', {
-      params: { teams: selectedTeams },
-      paramsSerializer: params => {
-        return params.teams.map(team => `teams=${encodeURIComponent(team)}`).join('&');
-      }
-    })
-    .then(response => {
-      console.log("Fetched news:", response.data);
-      setNews(response.data);
-    })
-    .catch(error => {
-      console.error('Error fetching news:', error);
-    });
+    axios
+      .get('https://football-news-backend-f8zi.onrender.com/api/news', {
+        params: { teams: selectedTeams },
+        paramsSerializer: params => {
+          return params.teams.map(team => `teams=${encodeURIComponent(team)}`).join('&');
+        }
+      })
+      .then(response => {
+        console.log('Fetched news:', response.data);
+        setNews(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching news:', error.message);
+      });
   }, [selectedTeams]);
 
   const toggleTeam = (team) => {
@@ -36,8 +37,8 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Football News</h1>
-      <h2>Live Football News</h2>
+      <h1>Football News App</h1>
+      <h2>Latest Football News</h2>
 
       <div className="button-group">
         {teams.map(team => (
@@ -46,7 +47,7 @@ function App() {
             onClick={() => toggleTeam(team)}
             className={selectedTeams.includes(team) ? 'selected' : ''}
           >
-            {team}
+            {team.charAt(0).toUpperCase() + team.slice(1)}
           </button>
         ))}
       </div>
@@ -60,14 +61,14 @@ function App() {
               {item.urlToImage && (
                 <img
                   src={item.urlToImage}
-                  alt={item.title}
+                  alt={item.title || 'News image'}
                   className="news-image"
                 />
               )}
               <a href={item.url} target="_blank" rel="noopener noreferrer">
-                <h4>{item.title}</h4>
+                <h4>{item.title || 'Untitled News'}</h4>
               </a>
-              <p>{item.description}</p>
+              <p>{item.description || 'No description available.'}</p>
             </li>
           ))}
         </ul>
